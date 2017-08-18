@@ -41,11 +41,13 @@ Required settings are:
   * Host Key is the fingerprint of the SSH server on the EC2 host. See below for details.  
 * S3 bucket for output files (-o)
   * Must be created by the admin ahead of time, and appropriate access supplied. Test access by 'aws s3 ls <bucket>' from the instance command line.
+
 Optional settings are:
 * Email address for notifications (-e)
   * Ensure that the email address is listed in AWS SES console as "verified" otherwise notifications will silently fail.
 * Flag to shutdown after rendering (-s)
   * Shutdown is initiated by the script run on the instance, so doesn't require an ongoing connection from the client.
+
 Configuration settings are:
 * Store current settings in defaults file for future use (-d)
 * Set current instance ID as the new "Primary" instance (-p)
@@ -61,9 +63,12 @@ awsRender requires a SSH Host Key fingerprint to ensure the connection to the in
 See the [Amazon EC2 user guide](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AccessingInstancesLinux.html) for information about reliably determining the Host Key fingerprint from the EC2 console on first boot.  
 To create a host key alias in known_hosts - `ssh -o HostKeyAlias=i-0123456789abcdef0 -i ~/.ssh/my-key.pem <host>` (or just edit the known_hosts file and replace the hostname/IP Address at the start of the appropriate line with the alias).  
 To find the host keys `ssh-keyscan <host>` from a trusted connection.  
-Supported algorithms are ssh-ed25519, ecdsa-sha2-nistp256 and ssh-rsa
+Tested algorithms are ssh-ed25519, ecdsa-sha2-nistp256 and ssh-rsa - others may work.
 
 In the future support for finding the host key in other places could be added (e.g. under a static DNS name, PuTTY's host key store for Windows users, EC2 instance tag).
+
+### AWS region settings
+You may need to set `AWS_REGION=<region>` as an environment variable if you get MissingRegion errors. Windows seems to require this as no other means of getting the region name appears to work. See https://github.com/aws/aws-sdk-go/issues/384 for details.
 
 ## Getting started with awsRender
 
